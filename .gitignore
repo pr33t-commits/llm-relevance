@@ -2,7 +2,6 @@
 checkpoints/
 logs/
 results/
-data/
 notebooks/
 
 # Byte-compiled / optimized / DLL files
