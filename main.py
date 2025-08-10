@@ -80,7 +80,7 @@ def main():
     #         args.model_name,
     #         # dtype="bfloat16",
     #         dtype="bfloat16",
-    #         device="cpu",
+    #         device="cuda",
     #         hf_model=hf_model,
     #         tokenizer=hf_tokenizer,
     #     )
@@ -89,13 +89,13 @@ def main():
     #         args.model_name,
     #         dtype="bfloat16",
     #         # dtype="bfloat8",
-    #         device="cpu",
+    #         device="cuda",
     #     )
     model = HookedTransformer.from_pretrained_no_processing(
             args.model_name,
             dtype="bfloat16",
             # dtype="bfloat8",
-            device="cpu",
+            device="cuda",
         )
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
@@ -176,4 +176,5 @@ def main():
         
 
 if __name__ == "__main__":
+
     main()
