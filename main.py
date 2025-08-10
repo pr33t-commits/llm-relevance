@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from transformer_lens import HookedTransformer
-from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
+from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed, BitsAndBytesConfig
 
 from data_utils import get_loaders, truncate_to_equal_length
 from methods import activation_patch, path_patch
@@ -17,7 +17,7 @@ from methods import activation_patch, path_patch
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str, default="meta-llama/Llama-3.1-8B-Instruct", help="LLaMA model")
+    parser.add_argument("--model_name", type=str, default="meta-llama/Llama-3.1-8B-Instruct", help="Llama model") # 'mistralai/Mistral-7B-Instruct-v0.1'
     parser.add_argument("--model_path", type=str, default=None, help="Path to the model.")
     parser.add_argument("--seed", type=int, default=42, help="Seed for sampling the calibration data.")
 
@@ -35,7 +35,7 @@ def main():
     parser.add_argument("--receiver_pos", type=str, default=None, help="Receiver position to be used in path patching.")
 
     parser.add_argument("--data", type=str, default="data/exp.jsonl", help="Path to the data.")
-    parser.add_argument("--nsamples", type=int, default=100, help="Number of calibration samples.")
+    parser.add_argument("--nsamples", type=int, default=1, help="Number of calibration samples.")
     parser.add_argument("--prompt_template", type=str, default=None, help="Prompt template for data.")
     parser.add_argument("--data_format", type=str, default=None, help="Data format")
 
@@ -59,28 +59,44 @@ def main():
         json.dump(vars(args), f, indent=4)
 
     print(f"loading llm: {args.model_name}")
-    if args.model_path:
-        hf_tokenizer = AutoTokenizer.from_pretrained(args.model_path, use_fast=False, trust_remote_code=True)
-        hf_model = AutoModelForCausalLM.from_pretrained(
-            args.model_path, 
-            torch_dtype=torch.bfloat16, 
-            low_cpu_mem_usage=True, 
-            device_map="auto"
-        )
-        model = HookedTransformer.from_pretrained_no_processing(
+    print(f"Model path: {args.model_path}")
+    
+    quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4")
+    
+    # if args.model_path:
+    #     hf_tokenizer = AutoTokenizer.from_pretrained(args.model_path, use_fast=False, trust_remote_code=True)
+    #     hf_model = AutoModelForCausalLM.from_pretrained(
+    #         args.model_path, 
+    #         torch_dtype=torch.bfloat16, 
+    #         low_cpu_mem_usage=True, 
+    #         device_map=None,#"auto",
+    #         # quantization_config=quant_config,
+    #     )
+    #     model = HookedTransformer.from_pretrained_no_processing(
+    #         args.model_name,
+    #         # dtype="bfloat16",
+    #         dtype="bfloat16",
+    #         device="cpu",
+    #         hf_model=hf_model,
+    #         tokenizer=hf_tokenizer,
+    #     )
+    # else:
+    #     model = HookedTransformer.from_pretrained_no_processing(
+    #         args.model_name,
+    #         dtype="bfloat16",
+    #         # dtype="bfloat8",
+    #         device="cpu",
+    #     )
+    model = HookedTransformer.from_pretrained_no_processing(
             args.model_name,
             dtype="bfloat16",
-            device="cuda",
-            hf_model=hf_model,
-            tokenizer=hf_tokenizer,
+            # dtype="bfloat8",
+            device="cpu",
         )
-    else:
-        model = HookedTransformer.from_pretrained_no_processing(
-            args.model_name,
-            dtype="bfloat16",
-            device="cuda",
-        )
-
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
 
@@ -157,7 +173,7 @@ def main():
             n_samples=args.nsamples,
         )
         df.to_csv(os.path.join(args.output_path, "results_df.csv"), index=False)
-
+        
 
 if __name__ == "__main__":
     main()
