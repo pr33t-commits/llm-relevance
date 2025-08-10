@@ -3,7 +3,7 @@
 set -e
 
 data_path=data/exp_filtered.jsonl
-model=meta-llama/Meta-Llama-3-8B-Instruct
+model=meta-llama/Llama-3-8B-Instruct
 model_path=../../model/Meta-Llama-3-8B-Instruct
 nsamples=100
 
