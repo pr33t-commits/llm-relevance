@@ -5,8 +5,7 @@ set -e
 data_path=data/exp_filtered.jsonl
 model=meta-llama/Meta-Llama-3-8B-Instruct ## meta-llama/Llama-3.1-8B-Instruct NOTE -change in name format
 model_path=../../model/Meta-Llama-3-8B-Instruct
-nsamples=100
-
+nsamples=10
 
 ##### pointwise
 
