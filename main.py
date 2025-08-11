@@ -95,7 +95,7 @@ def main():
             args.model_name,
             dtype="bfloat16",
             # dtype="bfloat8",
-            device="cuda",
+            # device="cuda",
             device_map = "auto",
             low_cpu_mem_usage = True
         )
@@ -181,6 +181,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
