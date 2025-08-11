@@ -97,6 +97,7 @@ def main():
             # dtype="bfloat8",
             device="cuda",
         )
+    print(next(model.parameters()).device)
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
 
@@ -178,3 +179,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
