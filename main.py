@@ -96,7 +96,8 @@ def main():
             dtype="bfloat16",
             # dtype="bfloat8",
             device="cuda",
-            device_map = "auto"
+            device_map = "auto",
+            low_cpu_mem_usage = True
         )
     print(next(model.parameters()).device)
     # Load data
@@ -180,5 +181,6 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
