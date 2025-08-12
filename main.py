@@ -91,23 +91,29 @@ def main():
     #         # dtype="bfloat8",
     #         device="cuda",
     #     )
-    # hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, trust_remote_code=True)
-    # hf_model = AutoModelForCausalLM.from_pretrained(
-    #     args.model_name, 
-    #     torch_dtype=torch.bfloat16, 
-    #     low_cpu_mem_usage=True, 
-    #     device_map="auto",#None,#"auto",
-    #     # quantization_config=quant_config,
-    # )
+    # Step 1: Load efficiently with HuggingFace
+    hf_model = AutoModelForCausalLM.from_pretrained(
+        args.model_name,
+        torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
+        device_map="auto",
+        low_cpu_mem_usage=True,
+        # Optional: Add quantization here if needed
+        # quantization_config=quant_config,
+    )
+    
+    hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    
+    print("Converting to HookedTransformer...")
+    
+    # Step 2: Convert to HookedTransformer (inherits device placement)
     model = HookedTransformer.from_pretrained_no_processing(
-            args.model_name,
-            dtype="bfloat16",
-            # dtype="bfloat8",
-            # device="cuda",
-            device_map = "auto",
-            low_cpu_mem_usage = True
-        )
-    print(next(hf_model.parameters()).device)
+        args.model_name,
+        hf_model=hf_model,  # Pass the already-loaded model
+        tokenizer=hf_tokenizer,
+        # Don't specify device_map again - it inherits from hf_model
+    )
+    
+    print(f"Model successfully loaded on: {next(model.parameters()).device}")
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
 
@@ -189,6 +195,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
