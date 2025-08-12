@@ -107,7 +107,7 @@ def main():
     
     # Step 2: Convert to HookedTransformer (inherits device placement)
     model = HookedTransformer.from_pretrained_no_processing(
-        args.model_name,
+        
         hf_model=hf_model,  # Pass the already-loaded model
         tokenizer=hf_tokenizer,
         # Don't specify device_map again - it inherits from hf_model
@@ -195,6 +195,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
