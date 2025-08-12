@@ -98,7 +98,7 @@ def main():
         device_map="auto",
         low_cpu_mem_usage=True,
         # Optional: Add quantization here if needed
-        # quantization_config=quant_config,
+        quantization_config=quant_config,
     )
     
     hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
@@ -107,7 +107,7 @@ def main():
     
     # Step 2: Convert to HookedTransformer (inherits device placement)
     model = HookedTransformer.from_pretrained_no_processing(
-        
+        model_name = args.model_name,
         hf_model=hf_model,  # Pass the already-loaded model
         tokenizer=hf_tokenizer,
         # Don't specify device_map again - it inherits from hf_model
@@ -195,6 +195,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
