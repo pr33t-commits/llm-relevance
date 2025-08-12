@@ -96,7 +96,7 @@ def main():
         args.model_name, 
         torch_dtype=torch.bfloat16, 
         low_cpu_mem_usage=True, 
-        device_map=None,#"auto",
+        device_map="auto",#None,#"auto",
         # quantization_config=quant_config,
     )
     # model = HookedTransformer.from_pretrained_no_processing(
@@ -189,6 +189,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
