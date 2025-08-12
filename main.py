@@ -91,22 +91,22 @@ def main():
     #         # dtype="bfloat8",
     #         device="cuda",
     #     )
-    hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, trust_remote_code=True)
-    hf_model = AutoModelForCausalLM.from_pretrained(
-        args.model_name, 
-        torch_dtype=torch.bfloat16, 
-        low_cpu_mem_usage=True, 
-        device_map="auto",#None,#"auto",
-        # quantization_config=quant_config,
-    )
-    # model = HookedTransformer.from_pretrained_no_processing(
-    #         args.model_name,
-    #         dtype="bfloat16",
-    #         # dtype="bfloat8",
-    #         # device="cuda",
-    #         device_map = "auto",
-    #         low_cpu_mem_usage = True
-    #     )
+    # hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, trust_remote_code=True)
+    # hf_model = AutoModelForCausalLM.from_pretrained(
+    #     args.model_name, 
+    #     torch_dtype=torch.bfloat16, 
+    #     low_cpu_mem_usage=True, 
+    #     device_map="auto",#None,#"auto",
+    #     # quantization_config=quant_config,
+    # )
+    model = HookedTransformer.from_pretrained_no_processing(
+            args.model_name,
+            dtype="bfloat16",
+            # dtype="bfloat8",
+            # device="cuda",
+            device_map = "auto",
+            low_cpu_mem_usage = True
+        )
     print(next(hf_model.parameters()).device)
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
@@ -189,6 +189,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
