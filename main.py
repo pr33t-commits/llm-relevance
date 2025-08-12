@@ -107,7 +107,7 @@ def main():
     #         device_map = "auto",
     #         low_cpu_mem_usage = True
     #     )
-    print(next(model.parameters()).device)
+    print(next(hf_model.parameters()).device)
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
 
@@ -189,6 +189,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
