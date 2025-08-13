@@ -61,11 +61,7 @@ def main():
     print(f"loading llm: {args.model_name}")
     print(f"Model path: {args.model_path}")
     
-    quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4")
+    
     
     # if args.model_path:
     #     hf_tokenizer = AutoTokenizer.from_pretrained(args.model_path, use_fast=False, trust_remote_code=True)
@@ -91,14 +87,19 @@ def main():
     #         # dtype="bfloat8",
     #         device="cuda",
     #     )
+    quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4")
     # Step 1: Load efficiently with HuggingFace
     hf_model = AutoModelForCausalLM.from_pretrained(
         args.model_name,
         torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
-        device_map="auto",
+        device="cuda",
         low_cpu_mem_usage=True,
         # Optional: Add quantization here if needed
-        quantization_config=quant_config,
+        # quantization_config=quant_config,
     )
     
     hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
@@ -195,6 +196,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
