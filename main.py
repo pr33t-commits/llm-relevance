@@ -1,4 +1,4 @@
-import argparse
+# import argparse
 import datetime
 import json
 import sys
@@ -93,24 +93,25 @@ def main():
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4")
     # Step 1: Load efficiently with HuggingFace
-    hf_model = AutoModelForCausalLM.from_pretrained(
-        args.model_name,
-        torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
-        device_map="cuda",
-        low_cpu_mem_usage=True,
-        # Optional: Add quantization here if needed
-        # quantization_config=quant_config,
-    )
+    # hf_model = AutoModelForCausalLM.from_pretrained(
+    #     args.model_name,
+    #     torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
+    #     device_map="cuda",
+    #     low_cpu_mem_usage=True,
+    #     # Optional: Add quantization here if needed
+    #     # quantization_config=quant_config,
+    # )
     
-    hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    # hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     
     print("Converting to HookedTransformer...")
     
     # Step 2: Convert to HookedTransformer (inherits device placement)
     model = HookedTransformer.from_pretrained_no_processing(
         model_name = args.model_name,
-        hf_model=hf_model,  # Pass the already-loaded model
-        tokenizer=hf_tokenizer,
+        # hf_model=hf_model,  # Pass the already-loaded model
+        # tokenizer=hf_tokenizer,
+        
         # Don't specify device_map again - it inherits from hf_model
     )
     
@@ -196,6 +197,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
