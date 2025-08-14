@@ -96,7 +96,7 @@ def main():
     hf_model = AutoModelForCausalLM.from_pretrained(
         args.model_name,
         torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
-        device="cuda",
+        device_map="cuda",
         low_cpu_mem_usage=True,
         # Optional: Add quantization here if needed
         # quantization_config=quant_config,
@@ -196,6 +196,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
