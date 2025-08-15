@@ -93,14 +93,17 @@ def main():
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4")
     # Step 1: Load efficiently with HuggingFace
-    # hf_model = AutoModelForCausalLM.from_pretrained(
-    #     args.model_name,
-    #     torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
-    #     device_map="cuda",
-    #     low_cpu_mem_usage=True,
-    #     # Optional: Add quantization here if needed
-    #     # quantization_config=quant_config,
-    # )
+    hf_model = AutoModelForCausalLM.from_pretrained(
+        args.model_name,
+        torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
+        device_map="auto",
+        max_memory={
+                    0: "10GiB",        # GPU 0: 10 GiB
+                    "cpu": "10GiB"     # CPU: 40 GiB
+                }
+        # Optional: Add quantization here if needed
+        # quantization_config=quant_config,
+    )
     
     # hf_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     
@@ -109,12 +112,12 @@ def main():
     # Step 2: Convert to HookedTransformer (inherits device placement)
     model = HookedTransformer.from_pretrained_no_processing(
         model_name = args.model_name,
-        # hf_model=hf_model,  # Pass the already-loaded model
+        hf_model=hf_model,  # Pass the already-loaded model
         # tokenizer=hf_tokenizer,
         
         # Don't specify device_map again - it inherits from hf_model
     )
-    
+    del hf_model
     print(f"Model successfully loaded on: {next(model.parameters()).device}")
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
@@ -197,6 +200,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
