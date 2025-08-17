@@ -98,8 +98,8 @@ def main():
         torch_dtype=torch.bfloat16,  # Use torch_dtype instead of dtype
         device_map="auto",
         max_memory={
-                    0: "10GiB",        # GPU 0: 10 GiB
-                    "cpu": "10GiB"     # CPU: 40 GiB
+                    0: "12GiB",        # GPU 0: 10 GiB
+                    "cpu": "7GiB"     # CPU: 40 GiB
                 }
         # Optional: Add quantization here if needed
         # quantization_config=quant_config,
@@ -200,6 +200,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
