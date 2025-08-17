@@ -114,7 +114,7 @@ def main():
         model_name = args.model_name,
         # hf_model=hf_model,  # Pass the already-loaded model
         dtype = torch.bfloat16,
-        tokenizer=hf_tokenizer,
+        # tokenizer=hf_tokenizer,
         device_map = 'cuda',
         
         
@@ -203,6 +203,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
