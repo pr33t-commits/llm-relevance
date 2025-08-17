@@ -120,7 +120,7 @@ def main():
         
         # Don't specify device_map again - it inherits from hf_model
     )
-    del hf_model
+   
     print(f"Model successfully loaded on: {next(model.parameters()).device}")
     # Load data
     use_chat = 'instruct' in args.model_name.lower()
@@ -203,6 +203,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
